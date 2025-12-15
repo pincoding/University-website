@@ -3,21 +3,29 @@ from pydantic import BaseModel
 from openai import OpenAI
 from fastapi.middleware.cors import CORSMiddleware
 import os
-from dotenv import load_dotenv # ⭐ 1. dotenv 라이브러리 임포트
+from dotenv import load_dotenv
 
-load_dotenv() # ⭐ 2. .env 파일을 읽어 환경 변수로 로드
+load_dotenv()
 
 app = FastAPI()
 
 # 🚨 API 키를 환경 변수에서 안전하게 읽어옵니다. (코드에 키 노출 없음)
-# 3. 하드코딩된 키를 os.environ.get()으로 대체
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY")) 
 FINE_TUNED_MODEL = "ft:gpt-3.5-turbo-0125:personal::Cmop8cxB" 
 
-# CORS 설정 (리액트 기본 포트 3000 허용)
+# ✅ CORS 설정 수정: GitHub Pages 주소를 허용 목록에 추가 (CORS 해결)
+origins = [
+    # 📌 프론트엔드 배포 주소 (필수 추가!)
+    "https://pincoding.github.io", 
+    
+    # 로컬 테스트용 (선택 사항)
+    "http://localhost:3000", 
+    "http://localhost:8000",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=origins,  # 수정된 origins 리스트 사용
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
