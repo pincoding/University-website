@@ -1,0 +1,9 @@
+# 1. API 키 파일 (절대 공개 금지)
+.env
+
+# 2. Python 관련 파일
+__pycache__/
+*.pyc
+.venv
+venv/
+pip-log.txt
